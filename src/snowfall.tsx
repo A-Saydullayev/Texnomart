@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 export default function Snowfall() {
   const [mounted, setMounted] = useState(false);
@@ -9,54 +9,51 @@ export default function Snowfall() {
     setMounted(true);
   }, []);
 
+  const snowflakes = useMemo(() => {
+    return [...Array(50)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      size: Math.random() * 12 + 8,
+      duration: 8 + Math.random() * 10,
+      delay: Math.random() * 8,
+      opacity: Math.random() * 0.4 + 0.4,
+    }));
+  }, []);
+
   if (!mounted) {
     return null;
   }
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
-      {[...Array(150)].map((_, i) => {
-        const left = Math.random() * 100;
-        const size = Math.random() * 20 + 10;
-        const duration = 10 + Math.random() * 15;
-        const delay = Math.random() * 10;
-        const opacity = Math.random() * 0.5 + 0.5;
-
-        return (
+    <>
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
+        {snowflakes.map((flake) => (
           <div
-            key={i}
-            className="absolute text-white drop-shadow-lg"
+            key={flake.id}
+            className="absolute will-change-transform"
             style={{
-              left: `${left}vw`,
-              fontSize: `${size}px`,
-              animation: `snowfall ${duration}s linear infinite`,
-              animationDelay: `${delay}s`,
-              opacity,
+              left: `${flake.left}vw`,
+              fontSize: `${flake.size}px`,
+              animation: `snowfall ${flake.duration}s linear infinite`,
+              animationDelay: `${flake.delay}s`,
+              opacity: flake.opacity,
             }}
           >
             ❄️
           </div>
-        );
-      })}
+        ))}
+      </div>
 
       <style jsx global>{`
         @keyframes snowfall {
           0% {
-            transform: translateY(-15vh) rotate(0deg);
-            opacity: 0;
-          }
-          15% {
-            opacity: 1;
-          }
-          85% {
-            opacity: 1;
+            transform: translateY(-10vh) translateZ(0);
           }
           100% {
-            transform: translateY(115vh) rotate(1080deg);
-            opacity: 0;
+            transform: translateY(110vh) translateZ(0);
           }
         }
       `}</style>
-    </div>
+    </>
   );
 }

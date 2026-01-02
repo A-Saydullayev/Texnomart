@@ -34,7 +34,7 @@ export default function RootLayout({
         <Snowfall />
         <QueryProvider>
           <Header />
-          <main className="min-h-screen">{children}</main>
+          {children}
           <Footer />
         </QueryProvider>
       </body>
