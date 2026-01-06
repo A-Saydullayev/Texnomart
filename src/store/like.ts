@@ -1,7 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { Store } from "@tanstack/store";
+import { useStore } from "@tanstack/react-store";
 
 interface LikeState {
   liked: Record<number, boolean>;
@@ -21,14 +21,7 @@ export const toggleLike = (id: number) => {
 };
 
 export const useLikeStore = () => {
-  const getSnapshot = () => likeStore.state;
-  const getServerSnapshot = () => likeStore.state;
-  
-  return useSyncExternalStore(
-    (callback) => likeStore.subscribe(callback),
-    getSnapshot,
-    getServerSnapshot
-  );
+  return useStore(likeStore);
 };
 
 export const isLiked = (id: number) => {
